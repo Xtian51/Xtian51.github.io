@@ -737,4 +737,455 @@
     <span class="cm">// 1. Infla el layout del ítem y crea el ViewHolder</span>
     <span class="kw">override fun</span> <span class="fn">onCreateViewHolder</span>(parent: <span class="cls">ViewGroup</span>, viewType: <span class="cls">Int</span>): <span class="cls">FrutaViewHolder</span> {
         <span class="kw">val</span> vista = <span class="cls">LayoutInflater</span>.<span class="fn">from</span>(parent.context)
-            .<span class="fn">i
+            .<span class="fn">inflate</span>(<span class="cls">R</span>.layout.item_fruta, parent, <span class="kw">false</span>)
+        <span class="kw">return</span> <span class="cls">FrutaViewHolder</span>(vista)
+    }
+
+    <span class="cm">// 2. Enlaza los datos del ítem en posición [position]</span>
+    <span class="kw">override fun</span> <span class="fn">onBindViewHolder</span>(holder: <span class="cls">FrutaViewHolder</span>, position: <span class="cls">Int</span>) {
+        holder.tvNombre.text = frutas[position]
+    }
+
+    <span class="cm">// 3. Informa cuántos ítems tiene la lista</span>
+    <span class="kw">override fun</span> <span class="fn">getItemCount</span>(): <span class="cls">Int</span> = frutas.size
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 5 — MainActivity (Clase 1)</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-kotlin">Kotlin</span>
+          <span class="code-filename">MainActivity.kt</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> androidx.recyclerview.widget.LinearLayoutManager
+<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
+
+<span class="kw">class</span> <span class="cls">MainActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_main)
+
+        <span class="cm">// 1. Datos de ejemplo (lista estática)</span>
+        <span class="kw">val</span> listaFrutas = <span class="fn">listOf</span>(
+            <span class="str">"🍎 Manzana"</span>, <span class="str">"🍌 Banano"</span>,  <span class="str">"🍊 Naranja"</span>,
+            <span class="str">"🍇 Uvas"</span>,    <span class="str">"🍓 Fresa"</span>,   <span class="str">"🥭 Mango"</span>,
+            <span class="str">"🍍 Piña"</span>,    <span class="str">"🍑 Durazno"</span>, <span class="str">"🍒 Cereza"</span>,
+            <span class="str">"🥝 Kiwi"</span>,    <span class="str">"🍋 Limón"</span>,   <span class="str">"🫐 Arándano"</span>
+        )
+
+        <span class="cm">// 2. Obtener referencia al RecyclerView</span>
+        <span class="kw">val</span> recyclerView = <span class="fn">findViewById</span>&lt;<span class="cls">RecyclerView</span>&gt;(<span class="cls">R</span>.id.recyclerView)
+
+        <span class="cm">// 3. Asignar LayoutManager (lista vertical)</span>
+        recyclerView.layoutManager = <span class="cls">LinearLayoutManager</span>(<span class="kw">this</span>)
+
+        <span class="cm">// 4. Crear y asignar el Adapter</span>
+        recyclerView.adapter = <span class="cls">FrutaAdapter</span>(listaFrutas)
+    }
+}</pre>
+        </div>
+      </div>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <p><strong>Punto de discusión:</strong> Probar reemplazar <code>LinearLayoutManager(this)</code> por
+          <code>GridLayoutManager(this, 2)</code> y observar el cambio sin modificar el Adapter. ¿Por qué funciona así?
+        </p>
+      </div>
+    </div>
+
+    <!-- CLASE 2 -->
+    <hr class="divider">
+
+    <div class="clase-header">
+      <span class="clase-num">Clase 02</span>
+      <h2 class="clase-title">Ítems con <span>múltiples vistas</span> y clics</h2>
+      <div class="clase-line"></div>
+    </div>
+
+    <div class="objetivo">
+      <strong>🎯 Objetivo de la clase</strong>
+      Evolucionar el ejemplo usando una data class propia, mostrar múltiples campos por ítem y manejar el evento clic en
+      cada fila para navegar a otra Activity.
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 6 — Data class del modelo</div>
+      <p>En lugar de usar <code>String</code> directamente, definimos una clase de datos que representa el dominio del
+        problema.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-kotlin">Kotlin</span>
+          <span class="code-filename">Producto.kt</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="cm">/**
+ * Modelo de datos para un producto.
+ * 'data class' genera automáticamente equals(), hashCode() y toString().
+ */</span>
+<span class="kw">data class</span> <span class="cls">Producto</span>(
+    <span class="kw">val</span> nombre:     <span class="cls">String</span>,
+    <span class="kw">val</span> precio:     <span class="cls">Double</span>,
+    <span class="kw">val</span> disponible: <span class="cls">Boolean</span>
+)</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 7 — Layout del ítem con múltiples vistas</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-xml">XML</span>
+          <span class="code-filename">res/layout/item_producto.xml</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+    <span class="attr">android:padding</span>=<span class="val">"12dp"</span>
+    <span class="attr">android:background</span>=<span class="val">"?attr/selectableItemBackground"</span><span class="tag">&gt;</span>
+
+    <span class="cm">&lt;!-- Nombre del producto --&gt;</span>
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvNombre"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"17sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
+        <span class="attr">android:textColor</span>=<span class="val">"@android:color/black"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toStartOf</span>=<span class="val">"@id/tvPrecio"</span> <span class="tag">/&gt;</span>
+
+    <span class="cm">&lt;!-- Precio (derecha) --&gt;</span>
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvPrecio"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"16sp"</span>
+        <span class="attr">android:textColor</span>=<span class="val">"#1a7a4a"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="cm">&lt;!-- Estado de disponibilidad (abajo) --&gt;</span>
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvEstado"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"13sp"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"4dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvNombre"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 8 — Adapter con clic y lógica condicional</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-kotlin">Kotlin</span>
+          <span class="code-filename">ProductoAdapter.kt</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="kw">import</span> android.graphics.Color
+<span class="kw">import</span> android.view.LayoutInflater
+<span class="kw">import</span> android.view.View
+<span class="kw">import</span> android.view.ViewGroup
+<span class="kw">import</span> android.widget.TextView
+<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
+
+<span class="kw">class</span> <span class="cls">ProductoAdapter</span>(
+    <span class="kw">private val</span> productos: <span class="cls">List</span>&lt;<span class="cls">Producto</span>&gt;,
+    <span class="kw">private val</span> onItemClick: (<span class="cls">Producto</span>) <span class="op">-&gt;</span> <span class="cls">Unit</span>   <span class="cm">// Lambda para el clic</span>
+) : <span class="cls">RecyclerView</span>.<span class="cls">Adapter</span>&lt;<span class="cls">ProductoAdapter</span>.<span class="cls">ProductoViewHolder</span>&gt;() {
+
+    <span class="kw">inner class</span> <span class="cls">ProductoViewHolder</span>(itemView: <span class="cls">View</span>) : <span class="cls">RecyclerView</span>.<span class="cls">ViewHolder</span>(itemView) {
+        <span class="kw">val</span> tvNombre: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvNombre)
+        <span class="kw">val</span> tvPrecio: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvPrecio)
+        <span class="kw">val</span> tvEstado: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvEstado)
+    }
+
+    <span class="kw">override fun</span> <span class="fn">onCreateViewHolder</span>(parent: <span class="cls">ViewGroup</span>, viewType: <span class="cls">Int</span>): <span class="cls">ProductoViewHolder</span> {
+        <span class="kw">val</span> vista = <span class="cls">LayoutInflater</span>.<span class="fn">from</span>(parent.context)
+            .<span class="fn">inflate</span>(<span class="cls">R</span>.layout.item_producto, parent, <span class="kw">false</span>)
+        <span class="kw">return</span> <span class="cls">ProductoViewHolder</span>(vista)
+    }
+
+    <span class="kw">override fun</span> <span class="fn">onBindViewHolder</span>(holder: <span class="cls">ProductoViewHolder</span>, position: <span class="cls">Int</span>) {
+        <span class="kw">val</span> producto = productos[position]
+
+        <span class="cm">// Enlazar datos</span>
+        holder.tvNombre.text = producto.nombre
+        holder.tvPrecio.text = <span class="str">"$%.2f"</span>.<span class="fn">format</span>(producto.precio)
+
+        <span class="cm">// Lógica condicional según disponibilidad</span>
+        <span class="kw">if</span> (producto.disponible) {
+            holder.tvEstado.text = <span class="str">"✅ Disponible"</span>
+            holder.tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#1a7a4a"</span>))
+        } <span class="kw">else</span> {
+            holder.tvEstado.text = <span class="str">"❌ Agotado"</span>
+            holder.tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#c0392b"</span>))
+        }
+
+        <span class="cm">// Manejar el clic sobre el ítem completo</span>
+        holder.itemView.<span class="fn">setOnClickListener</span> {
+            <span class="fn">onItemClick</span>(producto)
+        }
+    }
+
+    <span class="kw">override fun</span> <span class="fn">getItemCount</span>(): <span class="cls">Int</span> = productos.size
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 9 — MainActivity final (Clase 2)</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-kotlin">Kotlin</span>
+          <span class="code-filename">MainActivity.kt</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.content.Intent
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Toast
+<span class="kw">import</span> androidx.recyclerview.widget.LinearLayoutManager
+<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
+
+<span class="kw">class</span> <span class="cls">MainActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_main)
+
+        <span class="kw">val</span> listaProductos = <span class="fn">listOf</span>(
+            <span class="cls">Producto</span>(<span class="str">"Laptop Pro 15"</span>,    <span class="num">1299.99</span>, <span class="kw">true</span>),
+            <span class="cls">Producto</span>(<span class="str">"Teclado Mecánico"</span>,  <span class="num">89.99</span>,  <span class="kw">true</span>),
+            <span class="cls">Producto</span>(<span class="str">"Monitor 4K"</span>,        <span class="num">549.00</span>, <span class="kw">false</span>),
+            <span class="cls">Producto</span>(<span class="str">"Mouse Inalámbrico"</span>,  <span class="num">45.50</span>,  <span class="kw">true</span>),
+            <span class="cls">Producto</span>(<span class="str">"Webcam HD"</span>,          <span class="num">79.00</span>,  <span class="kw">false</span>),
+            <span class="cls">Producto</span>(<span class="str">"Auriculares BT"</span>,     <span class="num">159.99</span>, <span class="kw">true</span>),
+            <span class="cls">Producto</span>(<span class="str">"Hub USB-C"</span>,          <span class="num">35.00</span>,  <span class="kw">true</span>)
+        )
+
+        <span class="kw">val</span> recyclerView = <span class="fn">findViewById</span>&lt;<span class="cls">RecyclerView</span>&gt;(<span class="cls">R</span>.id.recyclerView)
+        recyclerView.layoutManager = <span class="cls">LinearLayoutManager</span>(<span class="kw">this</span>)
+
+        <span class="cm">// Al hacer clic: mostrar Toast Y navegar a DetalleActivity</span>
+        recyclerView.adapter = <span class="cls">ProductoAdapter</span>(listaProductos) { producto <span class="op">-&gt;</span>
+            <span class="cls">Toast</span>.<span class="fn">makeText</span>(<span class="kw">this</span>, <span class="str">"Seleccionaste: ${producto.nombre}"</span>, <span class="cls">Toast</span>.LENGTH_SHORT).<span class="fn">show</span>()
+
+            <span class="cm">// Reutilizamos lo que ya saben: Intent + Extras</span>
+            <span class="kw">val</span> intent = <span class="cls">Intent</span>(<span class="kw">this</span>, <span class="cls">DetalleActivity</span>::<span class="kw">class</span>.java)
+            intent.<span class="fn">putExtra</span>(<span class="str">"NOMBRE"</span>,     producto.nombre)
+            intent.<span class="fn">putExtra</span>(<span class="str">"PRECIO"</span>,     producto.precio)
+            intent.<span class="fn">putExtra</span>(<span class="str">"DISPONIBLE"</span>, producto.disponible)
+            <span class="fn">startActivity</span>(intent)
+        }
+    }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 10 — DetalleActivity (recibe los Extras)</div>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-kotlin">Kotlin</span>
+          <span class="code-filename">DetalleActivity.kt</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.graphics.Color
+<span class="kw">import</span> android.widget.Button
+<span class="kw">import</span> android.widget.TextView
+
+<span class="kw">class</span> <span class="cls">DetalleActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_detalle)
+
+        <span class="cm">// Recuperar los extras (ya lo saben hacer)</span>
+        <span class="kw">val</span> nombre     = intent.<span class="fn">getStringExtra</span>(<span class="str">"NOMBRE"</span>) <span class="op">?:</span> <span class="str">"Sin nombre"</span>
+        <span class="kw">val</span> precio     = intent.<span class="fn">getDoubleExtra</span>(<span class="str">"PRECIO"</span>, <span class="num">0.0</span>)
+        <span class="kw">val</span> disponible = intent.<span class="fn">getBooleanExtra</span>(<span class="str">"DISPONIBLE"</span>, <span class="kw">false</span>)
+
+        <span class="cm">// Mostrar en los TextViews del layout de detalle</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvDetNombre).<span class="fn">text</span>  = nombre
+        <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvDetPrecio).<span class="fn">text</span>  = <span class="str">"Precio: $%.2f"</span>.<span class="fn">format</span>(precio)
+
+        <span class="kw">val</span> tvEstado = <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvDetEstado)
+        <span class="kw">if</span> (disponible) {
+            tvEstado.text = <span class="str">"✅ En stock"</span>
+            tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#1a7a4a"</span>))
+        } <span class="kw">else</span> {
+            tvEstado.text = <span class="str">"❌ Sin stock"</span>
+            tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#c0392b"</span>))
+        }
+
+        <span class="cm">// Botón Volver: cierra esta Activity y regresa al Back Stack</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnVolver).<span class="fn">setOnClickListener</span> {
+            <span class="fn">finish</span>()
+        }
+    }
+}</pre>
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <span class="alert-icon">💡</span>
+        <p><strong>Conexión con lo ya visto:</strong> el Intent con Extras es exactamente lo que aprendieron antes.
+          RecyclerView simplemente es el disparador del clic que inicia ese flujo.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Código 11 — Layout de DetalleActivity</div>
+      <p>Layout de la segunda pantalla. Muestra los tres campos del producto y un botón para volver a la lista.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-xml">XML</span>
+          <span class="code-filename">res/layout/activity_detalle.xml</span>
+        </div>
+        <div class="code-body">
+          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:padding</span>=<span class="val">"24dp"</span><span class="tag">&gt;</span>
+
+    <span class="cm">&lt;!-- Nombre del producto (título principal) --&gt;</span>
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvDetNombre"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Nombre"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"26sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
+        <span class="attr">android:textColor</span>=<span class="val">"@android:color/black"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="cm">&lt;!-- Precio --&gt;</span>
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvDetPrecio"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Precio"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"20sp"</span>
+        <span class="attr">android:textColor</span>=<span class="val">"#1a7a4a"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"16dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvDetNombre"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="cm">&lt;!-- Estado de disponibilidad --&gt;</span>
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvDetEstado"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Estado"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"18sp"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"12dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvDetPrecio"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="cm">&lt;!-- Botón volver --&gt;</span>
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnVolver"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"← Volver a la lista"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"32dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvDetEstado"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre>
+        </div>
+      </div>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <p><strong>No olvidar:</strong> conectar el botón en <code>DetalleActivity.kt</code> con
+          <code>findViewById&lt;Button&gt;(R.id.btnVolver).setOnClickListener { finish() }</code>. El método
+          <code>finish()</code> cierra la Activity actual y regresa a la anterior del Back Stack.
+        </p>
+      </div>
+    </div>
+
+    <!-- TAREA -->
+    <div class="tarea">
+      <div class="tarea-badge">📝 Práctica — Tarea</div>
+      <h2>App: Directorio de Estudiantes</h2>
+      <p class="tarea-desc">
+        Desarrolla una aplicación Android que muestre un directorio de estudiantes mediante un RecyclerView. La app debe
+        demostrar dominio del Adapter, ViewHolder y comunicación entre pantallas con Intents.
+      </p>
+      <div class="reqs">
+        <div class="req">
+          <div class="req-check"></div>
+          <div>Crear una <strong>data class <code>Estudiante</code></strong> con los campos: nombre (String), carrera
+            (String), semestre (Int) y promedio (Double).</div>
+        </div>
+        <div class="req">
+          <div class="req-check"></div>
+          <div>El RecyclerView debe mostrar al menos <strong>8 estudiantes</strong> con todos sus campos visibles en
+            cada ítem.</div>
+        </div>
+        <div class="req">
+          <div class="req-check"></div>
+          <div>El color del promedio debe cambiar visualmente: <span style="color:#c0392b">rojo si &lt; 6.0</span>,
+            <span style="color:#e67e22">amarillo si entre 6.0 y 7.9</span>, <span style="color:#1a7a4a">verde si ≥
+              8.0</span>.
+          </div>
+        </div>
+        <div class="req">
+          <div class="req-check"></div>
+          <div>Al hacer <strong>clic en un estudiante</strong>, navegar a una segunda Activity que muestre su perfil
+            completo usando Extras del Intent.</div>
+        </div>
+        <div class="req">
+          <div class="req-check"></div>
+          <div>La segunda Activity debe permitir regresar a la lista (botón Volver o Back).</div>
+        </div>
+        <div class="req">
+          <div class="req-check"></div>
+          <div><strong>Punto extra:</strong> Agregar un EditText encima de la lista que filtre los estudiantes por
+            nombre en tiempo real al escribir.</div>
+        </div>
+      </div>
+      <div class="entrega">
+        <strong>Entrega de la práctica:</strong>
+        <ul>
+          <li>Generar la aplicación</li>
+          <li>Recepción de práctica funcional el día viernes 13 de marzo</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

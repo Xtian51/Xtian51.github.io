@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 2 — Navegación entre Activities · Android Studio + Kotlin</title>
+<title>Semana 8 — Navegación entre Activities · Android Studio + Kotlin</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Fraunces:ital,wght@0,600;0,800;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -492,7 +492,7 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="week-tag">📅 Semana 2 de 10</div>
+  <div class="week-tag">📅 Semana 8 de 16</div>
   <h1>Navegación entre<br><em>Activities</em> y Back Stack</h1>
   <p class="hero-sub">Flujo de pantallas complejo, manejo del Back Stack y retorno de resultados con ActivityResultLauncher.</p>
   <div class="meta-strip">

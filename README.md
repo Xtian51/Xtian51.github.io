@@ -1,1191 +1,1169 @@
-# Xtian51.github.io
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Semana 1 — RecyclerView · Android Studio + Kotlin</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Inter:wght@300;400;500&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0d0f14;
-      --surface: #13161e;
-      --surface2: #1a1e2a;
-      --border: #252a38;
-      --accent: #4f9eff;
-      --accent2: #a78bfa;
-      --accent3: #34d399;
-      --warn: #fbbf24;
-      --text: #e2e8f0;
-      --text-muted: #64748b;
-      --text-dim: #94a3b8;
-      --kotlin: #7f52ff;
-      --xml: #f97316;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #0d0f14 0%, #111827 50%, #0d0f14 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 60px 40px 50px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -80px;
-      right: -80px;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(79, 158, 255, 0.08) 0%, transparent 70%);
-    }
-
-    .pill {
-      display: inline-block;
-      background: rgba(79, 158, 255, 0.12);
-      border: 1px solid rgba(79, 158, 255, 0.3);
-      color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-    }
-
-    .hero h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-
-    .hero h1 span {
-      color: var(--accent);
-    }
-
-    .hero-sub {
-      color: var(--text-dim);
-      font-size: 1.05rem;
-      max-width: 620px;
-      margin-bottom: 32px;
-    }
-
-    .meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-    }
-
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-
-    .meta-item .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent3);
-    }
-
-    .meta-item .dot.purple {
-      background: var(--accent2);
-    }
-
-    .meta-item .dot.yellow {
-      background: var(--warn);
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-
-    .clase-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin: 52px 0 28px;
-    }
-
-    .clase-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 6px 14px;
-      border-radius: 6px;
-      white-space: nowrap;
-      text-transform: uppercase;
-    }
-
-    .clase-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .clase-title span {
-      color: var(--accent2);
-    }
-
-    .clase-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, var(--border), transparent);
-    }
-
-    .objetivo {
-      background: rgba(52, 211, 153, 0.06);
-      border: 1px solid rgba(52, 211, 153, 0.2);
-      border-left: 3px solid var(--accent3);
-      border-radius: 8px;
-      padding: 16px 20px;
-      margin-bottom: 28px;
-      font-size: 0.9rem;
-    }
-
-    .objetivo strong {
-      color: var(--accent3);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .section {
-      margin-bottom: 36px;
-    }
-
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-title::before {
-      content: '';
-      width: 4px;
-      height: 18px;
-      background: var(--accent);
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-
-    p {
-      margin-bottom: 12px;
-      color: var(--text-dim);
-      font-size: 0.95rem;
-    }
-
-    .concepts {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin: 20px 0;
-    }
-
-    .concept-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .concept-card .icon {
-      font-size: 1.4rem;
-      margin-bottom: 8px;
-    }
-
-    .concept-card h4 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-
-    .concept-card p {
-      font-size: 0.82rem;
-      margin: 0;
-      color: var(--text-muted);
-    }
-
-    .code-block {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 20px 0;
-      font-size: 0.85rem;
-    }
-
-    .code-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: var(--surface2);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .code-lang {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 4px;
-    }
-
-    .lang-kotlin {
-      background: rgba(127, 82, 255, 0.2);
-      color: var(--kotlin);
-      border: 1px solid rgba(127, 82, 255, 0.3);
-    }
-
-    .lang-xml {
-      background: rgba(249, 115, 22, 0.15);
-      color: var(--xml);
-      border: 1px solid rgba(249, 115, 22, 0.3);
-    }
-
-    .code-filename {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .code-body {
-      padding: 20px;
-      overflow-x: auto;
-    }
-
-    pre {
-      font-family: 'JetBrains Mono', monospace;
-      line-height: 1.65;
-      white-space: pre;
-      color: var(--text);
-    }
-
-    .kw {
-      color: #c792ea;
-    }
-
-    .fn {
-      color: #82aaff;
-    }
-
-    .str {
-      color: #c3e88d;
-    }
-
-    .cm {
-      color: #546e7a;
-      font-style: italic;
-    }
-
-    .num {
-      color: #f78c6c;
-    }
-
-    .cls {
-      color: #ffcb6b;
-    }
-
-    .op {
-      color: #89ddff;
-    }
-
-    .tag {
-      color: #f07178;
-    }
-
-    .attr {
-      color: #c3e88d;
-    }
-
-    .val {
-      color: #f78c6c;
-    }
-
-    .steps {
-      counter-reset: step;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin: 20px 0;
-    }
-
-    .step {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .step-num {
-      min-width: 30px;
-      height: 30px;
-      background: var(--accent);
-      color: #000;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .step-content h4 {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
-
-    .step-content p {
-      font-size: 0.85rem;
-      margin: 0;
-    }
-
-    .alert {
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin: 18px 0;
-      font-size: 0.88rem;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .alert-info {
-      background: rgba(79, 158, 255, 0.07);
-      border: 1px solid rgba(79, 158, 255, 0.2);
-    }
-
-    .alert-warn {
-      background: rgba(251, 191, 36, 0.07);
-      border: 1px solid rgba(251, 191, 36, 0.2);
-    }
-
-    .alert-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .alert p {
-      margin: 0;
-    }
-
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 48px 0 0;
-    }
-
-    .tarea {
-      background: linear-gradient(135deg, rgba(167, 139, 250, 0.08), rgba(79, 158, 255, 0.05));
-      border: 1px solid rgba(167, 139, 250, 0.25);
-      border-radius: 14px;
-      padding: 32px;
-      margin-top: 52px;
-    }
-
-    .tarea-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(167, 139, 250, 0.15);
-      border: 1px solid rgba(167, 139, 250, 0.3);
-      color: var(--accent2);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 18px;
-    }
-
-    .tarea h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 800;
-      margin-bottom: 14px;
-    }
-
-    .tarea-desc {
-      color: var(--text-dim);
-      margin-bottom: 22px;
-    }
-
-    .reqs {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-
-    .req {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      font-size: 0.9rem;
-      color: var(--text-dim);
-    }
-
-    .req-check {
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--accent2);
-      border-radius: 4px;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .entrega {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 18px;
-      font-size: 0.85rem;
-    }
-
-    .entrega strong {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--warn);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--surface);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 2 — Navegación entre Activities · Android Studio + Kotlin</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Fraunces:ital,wght@0,600;0,800;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --bg2: #ede8dc;
+    --surface: #ffffff;
+    --surface2: #faf8f4;
+    --border: #d9d2c4;
+    --border2: #c5bda8;
+    --accent: #c84b2f;
+    --accent2: #2d6a4f;
+    --accent3: #1d3a5f;
+    --gold: #b5892a;
+    --text: #1a1612;
+    --text-dim: #5c5549;
+    --text-muted: #8c8070;
+    --kotlin: #7f52ff;
+    --xml: #c84b2f;
+    --tag-bg: #1d3a5f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--accent3);
+    padding: 64px 48px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '02';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    font-family: 'Fraunces', serif;
+    font-size: 220px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .week-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 22px;
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.08;
+    margin-bottom: 16px;
+    max-width: 700px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: #a8c4d8;
+  }
+
+  .hero-sub {
+    color: #8aafc7;
+    font-size: 1rem;
+    max-width: 580px;
+    margin-bottom: 36px;
+  }
+
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 24px;
+  }
+  .meta-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #8aafc7;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .meta-chip span {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 28px 100px;
+  }
+
+  /* ── CLASE HEADER ── */
+  .clase-header {
+    margin: 60px 0 30px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0;
+    border-left: 5px solid var(--accent3);
+    padding-left: 20px;
+  }
+  .clase-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .clase-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .clase-title em {
+    font-style: italic;
+    color: var(--accent3);
+  }
+
+  /* ── OBJETIVO ── */
+  .objetivo {
+    background: var(--accent2);
+    border-radius: 6px;
+    padding: 16px 22px;
+    margin-bottom: 32px;
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  .objetivo strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+    color: #a8d5b5;
+  }
+
+  /* ── SECCIÓN ── */
+  .section { margin-bottom: 38px; }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  p { margin-bottom: 12px; color: var(--text-dim); font-size: 0.93rem; }
+
+  /* ── DIAGRAMA BACK STACK ── */
+  .stack-diagram {
+    background: var(--accent3);
+    border-radius: 10px;
+    padding: 28px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .stack-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8aafc7;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+  .stack-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .stack-box {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 10px 16px;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stack-box.active {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .stack-box.top-label::after {
+    content: '← TOP (visible)';
+    font-size: 10px;
+    color: #ffcba4;
+    font-style: italic;
+  }
+  .stack-arrow {
+    color: #8aafc7;
+    font-size: 18px;
+    text-align: center;
+    width: 100%;
+    margin: 2px 0;
+  }
+  .stack-base {
+    width: 100%;
+    border-top: 2px dashed rgba(255,255,255,0.2);
+    padding-top: 10px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #8aafc7;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── CONCEPTS GRID ── */
+  .concepts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    border-top: 3px solid var(--accent3);
+  }
+  .concept-card .icon { font-size: 1.3rem; margin-bottom: 8px; }
+  .concept-card h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent3);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .concept-card p { font-size: 0.82rem; margin: 0; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #1a1612;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 18px 0;
+    font-size: 0.84rem;
+    border: 1px solid #2d2820;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    background: #221e19;
+    border-bottom: 1px solid #2d2820;
+  }
+  .code-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+  }
+  .lang-kotlin { background: rgba(127,82,255,0.2); color: #b08fff; border: 1px solid rgba(127,82,255,0.35); }
+  .lang-xml    { background: rgba(200,75,47,0.2);  color: #e8836a; border: 1px solid rgba(200,75,47,0.35); }
+  .code-filename {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #6b6055;
+  }
+  .code-body { padding: 20px 22px; overflow-x: auto; }
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.65;
+    white-space: pre;
+    color: #e2ddd6;
+  }
+
+  /* Syntax */
+  .kw  { color: #c792ea; }
+  .fn  { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cm  { color: #4a453e; font-style: italic; }
+  .num { color: #f78c6c; }
+  .cls { color: #ffcb6b; }
+  .op  { color: #89ddff; }
+  .tag { color: #e06c75; }
+  .attr{ color: #c3e88d; }
+  .val { color: #f78c6c; }
+
+  /* ── FLUJO COMPARATIVO ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media(max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card {
+    border-radius: 8px;
+    padding: 18px;
+    border: 1px solid var(--border);
+  }
+  .compare-card.old {
+    background: #fff5f3;
+    border-color: #f5c4bb;
+  }
+  .compare-card.new {
+    background: #f3f9f5;
+    border-color: #b8ddc4;
+  }
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .compare-card.old .compare-label { color: var(--accent); }
+  .compare-card.new .compare-label { color: var(--accent2); }
+  .compare-card p { font-size: 0.83rem; margin: 0; }
+
+  /* ── ALERT ── */
+  .alert {
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.87rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alert-info { background: #edf4ff; border: 1px solid #bdd4f5; }
+  .alert-warn { background: #fffbec; border: 1px solid #f0d98a; }
+  .alert-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .alert p { margin: 0; color: var(--text-dim); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 2px solid var(--border2);
+    margin: 56px 0 0;
+    position: relative;
+  }
+  .divider::after {
+    content: '///';
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 4px;
+  }
+
+  /* ── TAREA ── */
+  .tarea {
+    background: var(--accent3);
+    border-radius: 12px;
+    padding: 36px;
+    margin-top: 56px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .tarea::before {
+    content: 'TAREA';
+    position: absolute;
+    right: -10px; bottom: -20px;
+    font-family: 'Fraunces', serif;
+    font-size: 120px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .tarea-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .tarea h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+  .tarea-desc { color: #8aafc7; margin-bottom: 24px; font-size: 0.93rem; }
+  .reqs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px; }
+  .req {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    color: #c8dae8;
+  }
+  .req-num {
+    min-width: 24px; height: 24px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .entrega {
+    background: rgba(0,0,0,0.25);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 0.84rem;
+  }
+  .entrega strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .entrega p { color: #8aafc7; margin: 0; }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #221e19; }
+  ::-webkit-scrollbar-thumb { background: #3d3630; border-radius: 3px; }
+</style>
 </head>
-
 <body>
 
-  <div class="hero">
-    <div class="pill"> Semana 7 de 16 - Programación de Aplicaciones Móviles 8A</div>
-    <h1>RecyclerView<br><span>en Android</span></h1>
-    <p class="hero-sub">Aprende a mostrar listas dinámicas de datos con el componente más potente de Android, usando
-      Kotlin y ConstraintLayout.</p>
-    <div class="meta-row">
-      <div class="meta-item">
-        <div class="dot"></div> 2 clases · 2 horas c/u
+<!-- HERO -->
+<div class="hero">
+  <div class="week-tag">📅 Semana 2 de 10</div>
+  <h1>Navegación entre<br><em>Activities</em> y Back Stack</h1>
+  <p class="hero-sub">Flujo de pantallas complejo, manejo del Back Stack y retorno de resultados con ActivityResultLauncher.</p>
+  <div class="meta-strip">
+    <div class="meta-chip">Clases <span>2 × 2 hrs</span></div>
+    <div class="meta-chip">Lenguaje <span>Kotlin</span></div>
+    <div class="meta-chip">Layout <span>ConstraintLayout</span></div>
+    <div class="meta-chip">Prereq <span>Semana 1 — RecyclerView</span></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══════════ CLASE 1 ══════════ -->
+  <div class="clase-header">
+    <div>
+      <div class="clase-eyebrow">Clase 01 · Semana 8 de 16</div>
+      <div class="clase-title">Back Stack y <em>navegación multi-pantalla</em></div>
+    </div>
+  </div>
+
+  <div class="objetivo">
+    <strong>🎯 Objetivo de la clase</strong>
+    Comprender cómo Android gestiona el historial de pantallas (Back Stack) y construir un flujo de 3 Activities con navegación correcta hacia adelante y hacia atrás.
+  </div>
+
+  <!-- Concepto Back Stack -->
+  <div class="section">
+    <div class="section-title">¿Qué es el Back Stack?</div>
+    <p>Android mantiene una pila de Activities abiertas. Cada vez que navegas a una nueva Activity, se apila encima. Al presionar "Atrás", la Activity del tope se destruye y vuelve la anterior.</p>
+
+    <div class="stack-diagram">
+      <div class="stack-title">// Estado del Back Stack al estar en PagoActivity</div>
+      <div class="stack-row">
+        <div class="stack-box active top-label">PagoActivity</div>
       </div>
-      <div class="meta-item">
-        <div class="dot yellow"></div> ConstraintLayout
+      <div class="stack-arrow">↑ startActivity()</div>
+      <div class="stack-row">
+        <div class="stack-box">CarritoActivity</div>
+      </div>
+      <div class="stack-arrow">↑ startActivity()</div>
+      <div class="stack-row">
+        <div class="stack-box">MainActivity</div>
+      </div>
+      <div class="stack-base">— FONDO DEL STACK —</div>
+    </div>
+
+    <div class="concepts">
+      <div class="concept-card">
+        <div class="icon">⬅️</div>
+        <h4>Botón "Atrás"</h4>
+        <p>Llama automáticamente a <code>finish()</code> en la Activity actual y saca a la anterior del stack.</p>
+      </div>
+      <div class="concept-card">
+        <div class="icon">🏠</div>
+        <h4>finish()</h4>
+        <p>Cierra la Activity actual programáticamente. Equivalente a presionar el botón Atrás.</p>
+      </div>
+      <div class="concept-card">
+        <div class="icon">🚩</div>
+        <h4>Flags del Intent</h4>
+        <p>Controlan comportamientos especiales: limpiar el stack, traer Activity al frente, etc.</p>
       </div>
     </div>
   </div>
 
-  <div class="container">
-
-    <!-- CLASE 1 -->
-    <div class="clase-header">
-      <span class="clase-num">Clase 01</span>
-      <h2 class="clase-title">Fundamentos del <span>RecyclerView</span></h2>
-      <div class="clase-line"></div>
-    </div>
-
-    <div class="objetivo">
-      <strong>🎯 Objetivo de la clase</strong>
-      Comprender la arquitectura de RecyclerView (Adapter + ViewHolder) y lograr mostrar una lista estática de texto en
-      pantalla.
-    </div>
-
-    <div class="section">
-      <div class="section-title">¿Qué es RecyclerView?</div>
-      <p>RecyclerView es el componente oficial de Android para mostrar listas o grillas de datos. A diferencia del
-        antiguo ListView, <strong>recicla</strong> las vistas que salen de pantalla en lugar de destruirlas, haciéndolo
-        muy eficiente con listas largas.</p>
-      <div class="concepts">
-        <div class="concept-card">
-          <div class="icon">♻️</div>
-          <h4>RecyclerView</h4>
-          <p>El contenedor visible en el layout. Gestiona qué ítems se muestran.</p>
-        </div>
-        <div class="concept-card">
-          <div class="icon">🔌</div>
-          <h4>Adapter</h4>
-          <p>Puente entre los datos y las vistas. Crea y enlaza cada ítem.</p>
-        </div>
-        <div class="concept-card">
-          <div class="icon">📦</div>
-          <h4>ViewHolder</h4>
-          <p>Guarda referencias a las vistas de un ítem para no buscarlas cada vez.</p>
-        </div>
-        <div class="concept-card">
-          <div class="icon">📐</div>
-          <h4>LayoutManager</h4>
-          <p>Decide la posición de los ítems: lista vertical, horizontal o grilla.</p>
-        </div>
+  <!-- Código 1: activity_main.xml -->
+  <div class="section">
+    <div class="section-title">Código 1 — Layout: Pantalla Principal</div>
+    <p>App de una tienda con 3 pantallas: Lista de productos → Carrito → Pago.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-xml">XML</span>
+        <span class="code-filename">res/layout/activity_main.xml</span>
       </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Pasos para configurar el proyecto</div>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <h4>Verificar dependencia en build.gradle</h4>
-            <p>RecyclerView está en AndroidX. Confirmar que esté incluido.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <h4>Agregar RecyclerView al layout de la Activity</h4>
-            <p>Colocar el widget en el XML con ConstraintLayout.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <h4>Crear el layout del ítem individual</h4>
-            <p>Un XML separado que define cómo se ve cada fila de la lista.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <h4>Crear el Adapter con su ViewHolder</h4>
-            <p>La clase Kotlin que conecta los datos con las vistas.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num">5</div>
-          <div class="step-content">
-            <h4>Configurar todo en la Activity</h4>
-            <p>Asignar LayoutManager y Adapter al RecyclerView.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 1 — Dependencia</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Gradle · Kotlin DSL</span>
-          <span class="code-filename">build.gradle.kts (Module)</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="cm">// En el bloque dependencies{} — normalmente ya viene incluido</span>
-<span class="fn">dependencies</span> {
-    <span class="fn">implementation</span>(<span class="str">"androidx.recyclerview:recyclerview:1.3.2"</span>)
-}</pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 2 — Layout principal</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-xml">XML</span>
-          <span class="code-filename">res/layout/activity_main.xml</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
-<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
-    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
-    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
-    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
-    <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span><span class="tag">&gt;</span>
-
-    <span class="tag">&lt;androidx.recyclerview.widget.RecyclerView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/recyclerView"</span>
-        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
-        <span class="attr">android:layout_height</span>=<span class="val">"0dp"</span>
-        <span class="attr">android:padding</span>=<span class="val">"8dp"</span>
-        <span class="attr">android:clipToPadding</span>=<span class="val">"false"</span>
-        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
-
-<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre>
-        </div>
-      </div>
-      <div class="alert alert-info">
-        <span class="alert-icon">💡</span>
-        <p><strong>width/height = "0dp"</strong> en ConstraintLayout significa "ocupa el espacio definido por las
-          constraints". Es equivalente a <code>match_constraint</code>.</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 3 — Layout del ítem</div>
-      <p>Este XML define cómo se ve cada fila. Se crea como nuevo archivo en <code>res/layout/</code>.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-xml">XML</span>
-          <span class="code-filename">res/layout/item_fruta.xml</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
-<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
-    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
-    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
-    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
-    <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-    <span class="attr">android:padding</span>=<span class="val">"12dp"</span><span class="tag">&gt;</span>
-
-    <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvNombreFruta"</span>
-        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
-        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:text</span>=<span class="val">"Fruta"</span>
-        <span class="attr">android:textSize</span>=<span class="val">"18sp"</span>
-        <span class="attr">android:textColor</span>=<span class="val">"@android:color/black"</span>
-        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
-
-<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 4 — Adapter y ViewHolder</div>
-      <p>El corazón del RecyclerView. Observar los tres métodos obligatorios que toda clase Adapter debe implementar.
-      </p>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Kotlin</span>
-          <span class="code-filename">FrutaAdapter.kt</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="kw">import</span> android.view.LayoutInflater
-<span class="kw">import</span> android.view.View
-<span class="kw">import</span> android.view.ViewGroup
-<span class="kw">import</span> android.widget.TextView
-<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
-
-<span class="cm">/**
- * Adapter que conecta una lista de Strings con el RecyclerView.
- * @param frutas Lista de datos que se van a mostrar.
- */</span>
-<span class="kw">class</span> <span class="cls">FrutaAdapter</span>(<span class="kw">private val</span> frutas: <span class="cls">List</span>&lt;<span class="cls">String</span>&gt;) :
-    <span class="cls">RecyclerView</span>.<span class="cls">Adapter</span>&lt;<span class="cls">FrutaAdapter</span>.<span class="cls">FrutaViewHolder</span>&gt;() {
-
-    <span class="cm">// ViewHolder: guarda referencias a las vistas del ítem</span>
-    <span class="kw">inner class</span> <span class="cls">FrutaViewHolder</span>(itemView: <span class="cls">View</span>) : <span class="cls">RecyclerView</span>.<span class="cls">ViewHolder</span>(itemView) {
-        <span class="kw">val</span> tvNombre: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvNombreFruta)
-    }
-
-    <span class="cm">// 1. Infla el layout del ítem y crea el ViewHolder</span>
-    <span class="kw">override fun</span> <span class="fn">onCreateViewHolder</span>(parent: <span class="cls">ViewGroup</span>, viewType: <span class="cls">Int</span>): <span class="cls">FrutaViewHolder</span> {
-        <span class="kw">val</span> vista = <span class="cls">LayoutInflater</span>.<span class="fn">from</span>(parent.context)
-            .<span class="fn">inflate</span>(<span class="cls">R</span>.layout.item_fruta, parent, <span class="kw">false</span>)
-        <span class="kw">return</span> <span class="cls">FrutaViewHolder</span>(vista)
-    }
-
-    <span class="cm">// 2. Enlaza los datos del ítem en posición [position]</span>
-    <span class="kw">override fun</span> <span class="fn">onBindViewHolder</span>(holder: <span class="cls">FrutaViewHolder</span>, position: <span class="cls">Int</span>) {
-        holder.tvNombre.text = frutas[position]
-    }
-
-    <span class="cm">// 3. Informa cuántos ítems tiene la lista</span>
-    <span class="kw">override fun</span> <span class="fn">getItemCount</span>(): <span class="cls">Int</span> = frutas.size
-}</pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 5 — MainActivity (Clase 1)</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Kotlin</span>
-          <span class="code-filename">MainActivity.kt</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
-<span class="kw">import</span> android.os.Bundle
-<span class="kw">import</span> androidx.recyclerview.widget.LinearLayoutManager
-<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
-
-<span class="kw">class</span> <span class="cls">MainActivity</span> : <span class="cls">AppCompatActivity</span>() {
-
-    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
-        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
-        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_main)
-
-        <span class="cm">// 1. Datos de ejemplo (lista estática)</span>
-        <span class="kw">val</span> listaFrutas = <span class="fn">listOf</span>(
-            <span class="str">"🍎 Manzana"</span>, <span class="str">"🍌 Banano"</span>,  <span class="str">"🍊 Naranja"</span>,
-            <span class="str">"🍇 Uvas"</span>,    <span class="str">"🍓 Fresa"</span>,   <span class="str">"🥭 Mango"</span>,
-            <span class="str">"🍍 Piña"</span>,    <span class="str">"🍑 Durazno"</span>, <span class="str">"🍒 Cereza"</span>,
-            <span class="str">"🥝 Kiwi"</span>,    <span class="str">"🍋 Limón"</span>,   <span class="str">"🫐 Arándano"</span>
-        )
-
-        <span class="cm">// 2. Obtener referencia al RecyclerView</span>
-        <span class="kw">val</span> recyclerView = <span class="fn">findViewById</span>&lt;<span class="cls">RecyclerView</span>&gt;(<span class="cls">R</span>.id.recyclerView)
-
-        <span class="cm">// 3. Asignar LayoutManager (lista vertical)</span>
-        recyclerView.layoutManager = <span class="cls">LinearLayoutManager</span>(<span class="kw">this</span>)
-
-        <span class="cm">// 4. Crear y asignar el Adapter</span>
-        recyclerView.adapter = <span class="cls">FrutaAdapter</span>(listaFrutas)
-    }
-}</pre>
-        </div>
-      </div>
-      <div class="alert alert-warn">
-        <span class="alert-icon">⚠️</span>
-        <p><strong>Punto de discusión:</strong> Probar reemplazar <code>LinearLayoutManager(this)</code> por
-          <code>GridLayoutManager(this, 2)</code> y observar el cambio sin modificar el Adapter. ¿Por qué funciona así?
-        </p>
-      </div>
-    </div>
-
-    <!-- CLASE 2 -->
-    <hr class="divider">
-
-    <div class="clase-header">
-      <span class="clase-num">Clase 02</span>
-      <h2 class="clase-title">Ítems con <span>múltiples vistas</span> y clics</h2>
-      <div class="clase-line"></div>
-    </div>
-
-    <div class="objetivo">
-      <strong>🎯 Objetivo de la clase</strong>
-      Evolucionar el ejemplo usando una data class propia, mostrar múltiples campos por ítem y manejar el evento clic en
-      cada fila para navegar a otra Activity.
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 6 — Data class del modelo</div>
-      <p>En lugar de usar <code>String</code> directamente, definimos una clase de datos que representa el dominio del
-        problema.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Kotlin</span>
-          <span class="code-filename">Producto.kt</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="cm">/**
- * Modelo de datos para un producto.
- * 'data class' genera automáticamente equals(), hashCode() y toString().
- */</span>
-<span class="kw">data class</span> <span class="cls">Producto</span>(
-    <span class="kw">val</span> nombre:     <span class="cls">String</span>,
-    <span class="kw">val</span> precio:     <span class="cls">Double</span>,
-    <span class="kw">val</span> disponible: <span class="cls">Boolean</span>
-)</pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 7 — Layout del ítem con múltiples vistas</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-xml">XML</span>
-          <span class="code-filename">res/layout/item_producto.xml</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
-<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
-    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
-    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
-    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
-    <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-    <span class="attr">android:padding</span>=<span class="val">"12dp"</span>
-    <span class="attr">android:background</span>=<span class="val">"?attr/selectableItemBackground"</span><span class="tag">&gt;</span>
-
-    <span class="cm">&lt;!-- Nombre del producto --&gt;</span>
-    <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvNombre"</span>
-        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
-        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:textSize</span>=<span class="val">"17sp"</span>
-        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
-        <span class="attr">android:textColor</span>=<span class="val">"@android:color/black"</span>
-        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintEnd_toStartOf</span>=<span class="val">"@id/tvPrecio"</span> <span class="tag">/&gt;</span>
-
-    <span class="cm">&lt;!-- Precio (derecha) --&gt;</span>
-    <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvPrecio"</span>
-        <span class="attr">android:layout_width</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:textSize</span>=<span class="val">"16sp"</span>
-        <span class="attr">android:textColor</span>=<span class="val">"#1a7a4a"</span>
-        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
-
-    <span class="cm">&lt;!-- Estado de disponibilidad (abajo) --&gt;</span>
-    <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvEstado"</span>
-        <span class="attr">android:layout_width</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:textSize</span>=<span class="val">"13sp"</span>
-        <span class="attr">android:layout_marginTop</span>=<span class="val">"4dp"</span>
-        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvNombre"</span>
-        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintBottom_toBottomOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
-
-<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 8 — Adapter con clic y lógica condicional</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Kotlin</span>
-          <span class="code-filename">ProductoAdapter.kt</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="kw">import</span> android.graphics.Color
-<span class="kw">import</span> android.view.LayoutInflater
-<span class="kw">import</span> android.view.View
-<span class="kw">import</span> android.view.ViewGroup
-<span class="kw">import</span> android.widget.TextView
-<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
-
-<span class="kw">class</span> <span class="cls">ProductoAdapter</span>(
-    <span class="kw">private val</span> productos: <span class="cls">List</span>&lt;<span class="cls">Producto</span>&gt;,
-    <span class="kw">private val</span> onItemClick: (<span class="cls">Producto</span>) <span class="op">-&gt;</span> <span class="cls">Unit</span>   <span class="cm">// Lambda para el clic</span>
-) : <span class="cls">RecyclerView</span>.<span class="cls">Adapter</span>&lt;<span class="cls">ProductoAdapter</span>.<span class="cls">ProductoViewHolder</span>&gt;() {
-
-    <span class="kw">inner class</span> <span class="cls">ProductoViewHolder</span>(itemView: <span class="cls">View</span>) : <span class="cls">RecyclerView</span>.<span class="cls">ViewHolder</span>(itemView) {
-        <span class="kw">val</span> tvNombre: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvNombre)
-        <span class="kw">val</span> tvPrecio: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvPrecio)
-        <span class="kw">val</span> tvEstado: <span class="cls">TextView</span> = itemView.<span class="fn">findViewById</span>(<span class="cls">R</span>.id.tvEstado)
-    }
-
-    <span class="kw">override fun</span> <span class="fn">onCreateViewHolder</span>(parent: <span class="cls">ViewGroup</span>, viewType: <span class="cls">Int</span>): <span class="cls">ProductoViewHolder</span> {
-        <span class="kw">val</span> vista = <span class="cls">LayoutInflater</span>.<span class="fn">from</span>(parent.context)
-            .<span class="fn">inflate</span>(<span class="cls">R</span>.layout.item_producto, parent, <span class="kw">false</span>)
-        <span class="kw">return</span> <span class="cls">ProductoViewHolder</span>(vista)
-    }
-
-    <span class="kw">override fun</span> <span class="fn">onBindViewHolder</span>(holder: <span class="cls">ProductoViewHolder</span>, position: <span class="cls">Int</span>) {
-        <span class="kw">val</span> producto = productos[position]
-
-        <span class="cm">// Enlazar datos</span>
-        holder.tvNombre.text = producto.nombre
-        holder.tvPrecio.text = <span class="str">"$%.2f"</span>.<span class="fn">format</span>(producto.precio)
-
-        <span class="cm">// Lógica condicional según disponibilidad</span>
-        <span class="kw">if</span> (producto.disponible) {
-            holder.tvEstado.text = <span class="str">"✅ Disponible"</span>
-            holder.tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#1a7a4a"</span>))
-        } <span class="kw">else</span> {
-            holder.tvEstado.text = <span class="str">"❌ Agotado"</span>
-            holder.tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#c0392b"</span>))
-        }
-
-        <span class="cm">// Manejar el clic sobre el ítem completo</span>
-        holder.itemView.<span class="fn">setOnClickListener</span> {
-            <span class="fn">onItemClick</span>(producto)
-        }
-    }
-
-    <span class="kw">override fun</span> <span class="fn">getItemCount</span>(): <span class="cls">Int</span> = productos.size
-}</pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 9 — MainActivity final (Clase 2)</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Kotlin</span>
-          <span class="code-filename">MainActivity.kt</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
-<span class="kw">import</span> android.content.Intent
-<span class="kw">import</span> android.os.Bundle
-<span class="kw">import</span> android.widget.Toast
-<span class="kw">import</span> androidx.recyclerview.widget.LinearLayoutManager
-<span class="kw">import</span> androidx.recyclerview.widget.RecyclerView
-
-<span class="kw">class</span> <span class="cls">MainActivity</span> : <span class="cls">AppCompatActivity</span>() {
-
-    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
-        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
-        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_main)
-
-        <span class="kw">val</span> listaProductos = <span class="fn">listOf</span>(
-            <span class="cls">Producto</span>(<span class="str">"Laptop Pro 15"</span>,    <span class="num">1299.99</span>, <span class="kw">true</span>),
-            <span class="cls">Producto</span>(<span class="str">"Teclado Mecánico"</span>,  <span class="num">89.99</span>,  <span class="kw">true</span>),
-            <span class="cls">Producto</span>(<span class="str">"Monitor 4K"</span>,        <span class="num">549.00</span>, <span class="kw">false</span>),
-            <span class="cls">Producto</span>(<span class="str">"Mouse Inalámbrico"</span>,  <span class="num">45.50</span>,  <span class="kw">true</span>),
-            <span class="cls">Producto</span>(<span class="str">"Webcam HD"</span>,          <span class="num">79.00</span>,  <span class="kw">false</span>),
-            <span class="cls">Producto</span>(<span class="str">"Auriculares BT"</span>,     <span class="num">159.99</span>, <span class="kw">true</span>),
-            <span class="cls">Producto</span>(<span class="str">"Hub USB-C"</span>,          <span class="num">35.00</span>,  <span class="kw">true</span>)
-        )
-
-        <span class="kw">val</span> recyclerView = <span class="fn">findViewById</span>&lt;<span class="cls">RecyclerView</span>&gt;(<span class="cls">R</span>.id.recyclerView)
-        recyclerView.layoutManager = <span class="cls">LinearLayoutManager</span>(<span class="kw">this</span>)
-
-        <span class="cm">// Al hacer clic: mostrar Toast Y navegar a DetalleActivity</span>
-        recyclerView.adapter = <span class="cls">ProductoAdapter</span>(listaProductos) { producto <span class="op">-&gt;</span>
-            <span class="cls">Toast</span>.<span class="fn">makeText</span>(<span class="kw">this</span>, <span class="str">"Seleccionaste: ${producto.nombre}"</span>, <span class="cls">Toast</span>.LENGTH_SHORT).<span class="fn">show</span>()
-
-            <span class="cm">// Reutilizamos lo que ya saben: Intent + Extras</span>
-            <span class="kw">val</span> intent = <span class="cls">Intent</span>(<span class="kw">this</span>, <span class="cls">DetalleActivity</span>::<span class="kw">class</span>.java)
-            intent.<span class="fn">putExtra</span>(<span class="str">"NOMBRE"</span>,     producto.nombre)
-            intent.<span class="fn">putExtra</span>(<span class="str">"PRECIO"</span>,     producto.precio)
-            intent.<span class="fn">putExtra</span>(<span class="str">"DISPONIBLE"</span>, producto.disponible)
-            <span class="fn">startActivity</span>(intent)
-        }
-    }
-}</pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 10 — DetalleActivity (recibe los Extras)</div>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-kotlin">Kotlin</span>
-          <span class="code-filename">DetalleActivity.kt</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
-<span class="kw">import</span> android.os.Bundle
-<span class="kw">import</span> android.graphics.Color
-<span class="kw">import</span> android.widget.Button
-<span class="kw">import</span> android.widget.TextView
-
-<span class="kw">class</span> <span class="cls">DetalleActivity</span> : <span class="cls">AppCompatActivity</span>() {
-
-    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
-        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
-        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_detalle)
-
-        <span class="cm">// Recuperar los extras (ya lo saben hacer)</span>
-        <span class="kw">val</span> nombre     = intent.<span class="fn">getStringExtra</span>(<span class="str">"NOMBRE"</span>) <span class="op">?:</span> <span class="str">"Sin nombre"</span>
-        <span class="kw">val</span> precio     = intent.<span class="fn">getDoubleExtra</span>(<span class="str">"PRECIO"</span>, <span class="num">0.0</span>)
-        <span class="kw">val</span> disponible = intent.<span class="fn">getBooleanExtra</span>(<span class="str">"DISPONIBLE"</span>, <span class="kw">false</span>)
-
-        <span class="cm">// Mostrar en los TextViews del layout de detalle</span>
-        <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvDetNombre).<span class="fn">text</span>  = nombre
-        <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvDetPrecio).<span class="fn">text</span>  = <span class="str">"Precio: $%.2f"</span>.<span class="fn">format</span>(precio)
-
-        <span class="kw">val</span> tvEstado = <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvDetEstado)
-        <span class="kw">if</span> (disponible) {
-            tvEstado.text = <span class="str">"✅ En stock"</span>
-            tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#1a7a4a"</span>))
-        } <span class="kw">else</span> {
-            tvEstado.text = <span class="str">"❌ Sin stock"</span>
-            tvEstado.<span class="fn">setTextColor</span>(<span class="cls">Color</span>.<span class="fn">parseColor</span>(<span class="str">"#c0392b"</span>))
-        }
-
-        <span class="cm">// Botón Volver: cierra esta Activity y regresa al Back Stack</span>
-        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnVolver).<span class="fn">setOnClickListener</span> {
-            <span class="fn">finish</span>()
-        }
-    }
-}</pre>
-        </div>
-      </div>
-      <div class="alert alert-info">
-        <span class="alert-icon">💡</span>
-        <p><strong>Conexión con lo ya visto:</strong> el Intent con Extras es exactamente lo que aprendieron antes.
-          RecyclerView simplemente es el disparador del clic que inicia ese flujo.</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Código 11 — Layout de DetalleActivity</div>
-      <p>Layout de la segunda pantalla. Muestra los tres campos del producto y un botón para volver a la lista.</p>
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang lang-xml">XML</span>
-          <span class="code-filename">res/layout/activity_detalle.xml</span>
-        </div>
-        <div class="code-body">
-          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+      <div class="code-body"><pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
 <span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
     <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
     <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
     <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
     <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span>
-    <span class="attr">android:padding</span>=<span class="val">"24dp"</span><span class="tag">&gt;</span>
+    <span class="attr">android:padding</span>=<span class="val">"20dp"</span><span class="tag">&gt;</span>
 
-    <span class="cm">&lt;!-- Nombre del producto (título principal) --&gt;</span>
     <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvDetNombre"</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvTitulo"</span>
         <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
         <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:text</span>=<span class="val">"Nombre"</span>
-        <span class="attr">android:textSize</span>=<span class="val">"26sp"</span>
+        <span class="attr">android:text</span>=<span class="val">"🛍️ Tienda"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"28sp"</span>
         <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
-        <span class="attr">android:textColor</span>=<span class="val">"@android:color/black"</span>
         <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
         <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
         <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
 
-    <span class="cm">&lt;!-- Precio --&gt;</span>
     <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvDetPrecio"</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvProducto"</span>
         <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
         <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:text</span>=<span class="val">"Precio"</span>
-        <span class="attr">android:textSize</span>=<span class="val">"20sp"</span>
-        <span class="attr">android:textColor</span>=<span class="val">"#1a7a4a"</span>
-        <span class="attr">android:layout_marginTop</span>=<span class="val">"16dp"</span>
-        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvDetNombre"</span>
-        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
-        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
-
-    <span class="cm">&lt;!-- Estado de disponibilidad --&gt;</span>
-    <span class="tag">&lt;TextView</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/tvDetEstado"</span>
-        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
-        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:text</span>=<span class="val">"Estado"</span>
+        <span class="attr">android:text</span>=<span class="val">"Laptop Pro 15 — $1,299.99"</span>
         <span class="attr">android:textSize</span>=<span class="val">"18sp"</span>
-        <span class="attr">android:layout_marginTop</span>=<span class="val">"12dp"</span>
-        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvDetPrecio"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"32dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvTitulo"</span>
         <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
         <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
 
-    <span class="cm">&lt;!-- Botón volver --&gt;</span>
     <span class="tag">&lt;Button</span>
-        <span class="attr">android:id</span>=<span class="val">"@+id/btnVolver"</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnAgregarCarrito"</span>
         <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
         <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
-        <span class="attr">android:text</span>=<span class="val">"← Volver a la lista"</span>
-        <span class="attr">android:layout_marginTop</span>=<span class="val">"32dp"</span>
-        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvDetEstado"</span>
+        <span class="attr">android:text</span>=<span class="val">"Agregar al carrito →"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"24dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvProducto"</span>
         <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
         <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
 
-<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre>
-        </div>
-      </div>
-      <div class="alert alert-warn">
-        <span class="alert-icon">⚠️</span>
-        <p><strong>No olvidar:</strong> conectar el botón en <code>DetalleActivity.kt</code> con
-          <code>findViewById&lt;Button&gt;(R.id.btnVolver).setOnClickListener { finish() }</code>. El método
-          <code>finish()</code> cierra la Activity actual y regresa a la anterior del Back Stack.
-        </p>
-      </div>
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre></div>
     </div>
-
-    <!-- TAREA -->
-    <div class="tarea">
-      <div class="tarea-badge">📝 Práctica — Tarea</div>
-      <h2>App: Directorio de Estudiantes</h2>
-      <p class="tarea-desc">
-        Desarrolla una aplicación Android que muestre un directorio de estudiantes mediante un RecyclerView. La app debe
-        demostrar dominio del Adapter, ViewHolder y comunicación entre pantallas con Intents.
-      </p>
-      <div class="reqs">
-        <div class="req">
-          <div class="req-check"></div>
-          <div>Crear una <strong>data class <code>Estudiante</code></strong> con los campos: nombre (String), carrera
-            (String), semestre (Int) y promedio (Double).</div>
-        </div>
-        <div class="req">
-          <div class="req-check"></div>
-          <div>El RecyclerView debe mostrar al menos <strong>8 estudiantes</strong> con todos sus campos visibles en
-            cada ítem.</div>
-        </div>
-        <div class="req">
-          <div class="req-check"></div>
-          <div>El color del promedio debe cambiar visualmente: <span style="color:#c0392b">rojo si &lt; 6.0</span>,
-            <span style="color:#e67e22">amarillo si entre 6.0 y 7.9</span>, <span style="color:#1a7a4a">verde si ≥
-              8.0</span>.
-          </div>
-        </div>
-        <div class="req">
-          <div class="req-check"></div>
-          <div>Al hacer <strong>clic en un estudiante</strong>, navegar a una segunda Activity que muestre su perfil
-            completo usando Extras del Intent.</div>
-        </div>
-        <div class="req">
-          <div class="req-check"></div>
-          <div>La segunda Activity debe permitir regresar a la lista (botón Volver o Back).</div>
-        </div>
-        <div class="req">
-          <div class="req-check"></div>
-          <div><strong>Punto extra:</strong> Agregar un EditText encima de la lista que filtre los estudiantes por
-            nombre en tiempo real al escribir.</div>
-        </div>
-      </div>
-      <div class="entrega">
-        <strong>Entrega de la práctica:</strong>
-        <ul>
-          <li>Generar la aplicación</li>
-          <li>Recepción de práctica funcional el día viernes 13 de marzo</li>
-        </ul>
-      </div>
-    </div>
-
   </div>
-</body>
 
+  <!-- Código 2: activity_carrito.xml -->
+  <div class="section">
+    <div class="section-title">Código 2 — Layout: Carrito</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-xml">XML</span>
+        <span class="code-filename">res/layout/activity_carrito.xml</span>
+      </div>
+      <div class="code-body"><pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:padding</span>=<span class="val">"20dp"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvTituloCarrito"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"🛒 Mi Carrito"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"26sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvItemCarrito"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"16sp"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"24dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvTituloCarrito"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnProcederPago"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Proceder al pago →"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"24dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvItemCarrito"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnVolverTienda"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"← Seguir comprando"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"12dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/btnProcederPago"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre></div>
+    </div>
+  </div>
+
+  <!-- Código 3: activity_pago.xml -->
+  <div class="section">
+    <div class="section-title">Código 3 — Layout: Pantalla de Pago</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-xml">XML</span>
+        <span class="code-filename">res/layout/activity_pago.xml</span>
+      </div>
+      <div class="code-body"><pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:padding</span>=<span class="val">"20dp"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvTituloPago"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"💳 Pago"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"26sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvResumenPago"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"16sp"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"24dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvTituloPago"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnConfirmarPago"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"✅ Confirmar Compra"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"32dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvResumenPago"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnCancelar"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"✖ Cancelar y volver al inicio"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"12dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/btnConfirmarPago"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre></div>
+    </div>
+  </div>
+
+  <!-- Código 4: MainActivity.kt -->
+  <div class="section">
+    <div class="section-title">Código 4 — MainActivity.kt</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-kotlin">Kotlin</span>
+        <span class="code-filename">MainActivity.kt</span>
+      </div>
+      <div class="code-body"><pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.content.Intent
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Button
+
+<span class="kw">class</span> <span class="cls">MainActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_main)
+
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnAgregarCarrito).<span class="fn">setOnClickListener</span> {
+            <span class="cm">// Ir al carrito enviando el producto como Extra</span>
+            <span class="kw">val</span> intent = <span class="cls">Intent</span>(<span class="kw">this</span>, <span class="cls">CarritoActivity</span>::<span class="kw">class</span>.java)
+            intent.<span class="fn">putExtra</span>(<span class="str">"PRODUCTO"</span>, <span class="str">"Laptop Pro 15"</span>)
+            intent.<span class="fn">putExtra</span>(<span class="str">"PRECIO"</span>, <span class="num">1299.99</span>)
+            <span class="fn">startActivity</span>(intent)
+        }
+    }
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Código 5: CarritoActivity.kt -->
+  <div class="section">
+    <div class="section-title">Código 5 — CarritoActivity.kt</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-kotlin">Kotlin</span>
+        <span class="code-filename">CarritoActivity.kt</span>
+      </div>
+      <div class="code-body"><pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.content.Intent
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Button
+<span class="kw">import</span> android.widget.TextView
+
+<span class="kw">class</span> <span class="cls">CarritoActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_carrito)
+
+        <span class="cm">// Recibir datos de la pantalla anterior</span>
+        <span class="kw">val</span> producto = intent.<span class="fn">getStringExtra</span>(<span class="str">"PRODUCTO"</span>) <span class="op">?:</span> <span class="str">""</span>
+        <span class="kw">val</span> precio   = intent.<span class="fn">getDoubleExtra</span>(<span class="str">"PRECIO"</span>, <span class="num">0.0</span>)
+
+        <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvItemCarrito).text =
+            <span class="str">"• $producto — ${"$"}${"%.2f".format(precio)}"</span>
+
+        <span class="cm">// Avanzar a PagoActivity</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnProcederPago).<span class="fn">setOnClickListener</span> {
+            <span class="kw">val</span> intent = <span class="cls">Intent</span>(<span class="kw">this</span>, <span class="cls">PagoActivity</span>::<span class="kw">class</span>.java)
+            intent.<span class="fn">putExtra</span>(<span class="str">"PRODUCTO"</span>, producto)
+            intent.<span class="fn">putExtra</span>(<span class="str">"PRECIO"</span>, precio)
+            <span class="fn">startActivity</span>(intent)
+        }
+
+        <span class="cm">// Volver a MainActivity usando finish()</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnVolverTienda).<span class="fn">setOnClickListener</span> {
+            <span class="fn">finish</span>()   <span class="cm">// Destruye esta Activity y vuelve a la anterior del stack</span>
+        }
+    }
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Código 6: PagoActivity.kt -->
+  <div class="section">
+    <div class="section-title">Código 6 — PagoActivity.kt con FLAG para limpiar el stack</div>
+    <p>Al confirmar la compra, queremos regresar a <code>MainActivity</code> <strong>limpiando todo el historial</strong> para que el usuario no pueda volver al carrito ni al pago con el botón Atrás.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-kotlin">Kotlin</span>
+        <span class="code-filename">PagoActivity.kt</span>
+      </div>
+      <div class="code-body"><pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.content.Intent
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Button
+<span class="kw">import</span> android.widget.TextView
+<span class="kw">import</span> android.widget.Toast
+
+<span class="kw">class</span> <span class="cls">PagoActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_pago)
+
+        <span class="kw">val</span> producto = intent.<span class="fn">getStringExtra</span>(<span class="str">"PRODUCTO"</span>) <span class="op">?:</span> <span class="str">""</span>
+        <span class="kw">val</span> precio   = intent.<span class="fn">getDoubleExtra</span>(<span class="str">"PRECIO"</span>, <span class="num">0.0</span>)
+
+        <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvResumenPago).text =
+            <span class="str">"Producto: $producto\nTotal: ${"$"}${"%.2f".format(precio)}"</span>
+
+        <span class="cm">// Confirmar: limpiar el Back Stack completo y volver al inicio</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnConfirmarPago).<span class="fn">setOnClickListener</span> {
+            <span class="cls">Toast</span>.<span class="fn">makeText</span>(<span class="kw">this</span>, <span class="str">"✅ ¡Compra confirmada!"</span>, <span class="cls">Toast</span>.LENGTH_LONG).<span class="fn">show</span>()
+
+            <span class="kw">val</span> intent = <span class="cls">Intent</span>(<span class="kw">this</span>, <span class="cls">MainActivity</span>::<span class="kw">class</span>.java)
+            <span class="cm">// FLAG_ACTIVITY_CLEAR_TOP: destruye todas las Activities encima de MainActivity</span>
+            <span class="cm">// FLAG_ACTIVITY_NEW_TASK:  necesario al usar CLEAR_TOP en este contexto</span>
+            intent.flags = <span class="cls">Intent</span>.FLAG_ACTIVITY_CLEAR_TOP <span class="op">or</span>
+                           <span class="cls">Intent</span>.FLAG_ACTIVITY_NEW_TASK
+            <span class="fn">startActivity</span>(intent)
+            <span class="fn">finish</span>()
+        }
+
+        <span class="cm">// Cancelar: simplemente cerrar esta Activity (vuelve al carrito)</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnCancelar).<span class="fn">setOnClickListener</span> {
+            <span class="fn">finish</span>()
+        }
+    }
+}</pre></div>
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <p><strong>FLAG_ACTIVITY_CLEAR_TOP</strong> es el patrón estándar para flujos de "compra exitosa", "login completado" o cualquier pantalla que no debe aparecer en el historial de Atrás.</p>
+    </div>
+  </div>
+
+  <!-- ══════════ CLASE 2 ══════════ -->
+  <hr class="divider">
+
+  <div class="clase-header">
+    <div>
+      <div class="clase-eyebrow">Clase 02 · Semana 2</div>
+      <div class="clase-title"><em>ActivityResultLauncher</em> — Retorno de resultados</div>
+    </div>
+  </div>
+
+  <div class="objetivo">
+    <strong>🎯 Objetivo de la clase</strong>
+    Implementar comunicación bidireccional entre Activities: enviar datos hacia adelante <strong>y</strong> recibir un resultado de vuelta cuando la Activity secundaria cierra.
+  </div>
+
+  <!-- Comparativa -->
+  <div class="section">
+    <div class="section-title">El problema que resuelve</div>
+    <p>¿Qué pasa cuando necesitas que la Activity B le devuelva información a la Activity A? Por ejemplo: el usuario edita su perfil en B y al volver a A queremos ver los cambios reflejados.</p>
+
+    <div class="compare-grid">
+      <div class="compare-card old">
+        <div class="compare-label">❌ Método antiguo (deprecated)</div>
+        <p><code>startActivityForResult()</code> + <code>onActivityResult()</code> — Deprecado desde API 29. No usar en código nuevo.</p>
+      </div>
+      <div class="compare-card new">
+        <div class="compare-label">✅ Método actual</div>
+        <p><code>ActivityResultLauncher</code> con <code>registerForActivityResult()</code> — Forma moderna, segura y recomendada por Google.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Código 7: activity_editor.xml -->
+  <div class="section">
+    <div class="section-title">Código 7 — Layout: Editor de Perfil (Activity B)</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-xml">XML</span>
+        <span class="code-filename">res/layout/activity_editor.xml</span>
+      </div>
+      <div class="code-body"><pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:padding</span>=<span class="val">"20dp"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvEditorTitulo"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"✏️ Editar Perfil"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"24sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;EditText</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/etNuevoNombre"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:hint</span>=<span class="val">"Nuevo nombre"</span>
+        <span class="attr">android:inputType</span>=<span class="val">"textPersonName"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"28dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvEditorTitulo"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;EditText</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/etNuevoEmail"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:hint</span>=<span class="val">"Nuevo email"</span>
+        <span class="attr">android:inputType</span>=<span class="val">"textEmailAddress"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"14dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/etNuevoNombre"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnGuardar"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Guardar cambios"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"24dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/etNuevoEmail"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnCancelarEditor"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Cancelar"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"10dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/btnGuardar"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre></div>
+    </div>
+  </div>
+
+  <!-- Código 8: activity_perfil.xml -->
+  <div class="section">
+    <div class="section-title">Código 8 — Layout: Perfil (Activity A)</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-xml">XML</span>
+        <span class="code-filename">res/layout/activity_perfil.xml</span>
+      </div>
+      <div class="code-body"><pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+<span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
+    <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
+    <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
+    <span class="attr">android:layout_width</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:layout_height</span>=<span class="val">"match_parent"</span>
+    <span class="attr">android:padding</span>=<span class="val">"20dp"</span><span class="tag">&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvPerfilTitulo"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"👤 Mi Perfil"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"26sp"</span>
+        <span class="attr">android:textStyle</span>=<span class="val">"bold"</span>
+        <span class="attr">app:layout_constraintTop_toTopOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvNombreActual"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Nombre: Juan Pérez"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"18sp"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"28dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvPerfilTitulo"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;TextView</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/tvEmailActual"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"Email: juan@email.com"</span>
+        <span class="attr">android:textSize</span>=<span class="val">"16sp"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"10dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvNombreActual"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;Button</span>
+        <span class="attr">android:id</span>=<span class="val">"@+id/btnEditarPerfil"</span>
+        <span class="attr">android:layout_width</span>=<span class="val">"0dp"</span>
+        <span class="attr">android:layout_height</span>=<span class="val">"wrap_content"</span>
+        <span class="attr">android:text</span>=<span class="val">"✏️ Editar perfil"</span>
+        <span class="attr">android:layout_marginTop</span>=<span class="val">"28dp"</span>
+        <span class="attr">app:layout_constraintTop_toBottomOf</span>=<span class="val">"@id/tvEmailActual"</span>
+        <span class="attr">app:layout_constraintStart_toStartOf</span>=<span class="val">"parent"</span>
+        <span class="attr">app:layout_constraintEnd_toEndOf</span>=<span class="val">"parent"</span> <span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></pre></div>
+    </div>
+  </div>
+
+  <!-- Código 9: EditorActivity.kt -->
+  <div class="section">
+    <div class="section-title">Código 9 — EditorActivity.kt (Activity B: devuelve resultado)</div>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-kotlin">Kotlin</span>
+        <span class="code-filename">EditorActivity.kt</span>
+      </div>
+      <div class="code-body"><pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.app.Activity
+<span class="kw">import</span> android.content.Intent
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Button
+<span class="kw">import</span> android.widget.EditText
+
+<span class="kw">class</span> <span class="cls">EditorActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_editor)
+
+        <span class="kw">val</span> etNombre = <span class="fn">findViewById</span>&lt;<span class="cls">EditText</span>&gt;(<span class="cls">R</span>.id.etNuevoNombre)
+        <span class="kw">val</span> etEmail  = <span class="fn">findViewById</span>&lt;<span class="cls">EditText</span>&gt;(<span class="cls">R</span>.id.etNuevoEmail)
+
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnGuardar).<span class="fn">setOnClickListener</span> {
+            <span class="kw">val</span> nombre = etNombre.text.toString()
+            <span class="kw">val</span> email  = etEmail.text.toString()
+
+            <span class="cm">// Preparar el Intent de resultado</span>
+            <span class="kw">val</span> resultIntent = <span class="cls">Intent</span>()
+            resultIntent.<span class="fn">putExtra</span>(<span class="str">"NUEVO_NOMBRE"</span>, nombre)
+            resultIntent.<span class="fn">putExtra</span>(<span class="str">"NUEVO_EMAIL"</span>,  email)
+
+            <span class="cm">// RESULT_OK indica que el usuario completó la acción exitosamente</span>
+            <span class="fn">setResult</span>(<span class="cls">Activity</span>.RESULT_OK, resultIntent)
+            <span class="fn">finish</span>()   <span class="cm">// Cierra EditorActivity y regresa a PerfilActivity</span>
+        }
+
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnCancelarEditor).<span class="fn">setOnClickListener</span> {
+            <span class="cm">// RESULT_CANCELED: el usuario canceló, no hay datos que devolver</span>
+            <span class="fn">setResult</span>(<span class="cls">Activity</span>.RESULT_CANCELED)
+            <span class="fn">finish</span>()
+        }
+    }
+}</pre></div>
+    </div>
+  </div>
+
+  <!-- Código 10: PerfilActivity.kt -->
+  <div class="section">
+    <div class="section-title">Código 10 — PerfilActivity.kt (Activity A: recibe el resultado)</div>
+    <p>La clave está en registrar el launcher <strong>antes</strong> de que el usuario haga clic — se declara como propiedad de la clase, no dentro del <code>setOnClickListener</code>.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang lang-kotlin">Kotlin</span>
+        <span class="code-filename">PerfilActivity.kt</span>
+      </div>
+      <div class="code-body"><pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+<span class="kw">import</span> android.app.Activity
+<span class="kw">import</span> android.content.Intent
+<span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.widget.Button
+<span class="kw">import</span> android.widget.TextView
+<span class="kw">import</span> android.widget.Toast
+<span class="kw">import</span> androidx.activity.result.contract.ActivityResultContracts
+
+<span class="kw">class</span> <span class="cls">PerfilActivity</span> : <span class="cls">AppCompatActivity</span>() {
+
+    <span class="cm">// ── 1. Registrar el launcher ANTES de onCreate ────────────────────────
+    //    registerForActivityResult debe llamarse en la inicialización,
+    //    no dentro de listeners o funciones que se ejecutan después.</span>
+    <span class="kw">private val</span> editarPerfilLauncher = <span class="fn">registerForActivityResult</span>(
+        <span class="cls">ActivityResultContracts</span>.<span class="cls">StartActivityForResult</span>()
+    ) { result <span class="op">-&gt;</span>
+
+        <span class="cm">// ── 2. Esta lambda se ejecuta cuando EditorActivity termina ──────</span>
+        <span class="kw">if</span> (result.resultCode == <span class="cls">Activity</span>.RESULT_OK) {
+            <span class="kw">val</span> data        = result.data
+            <span class="kw">val</span> nuevoNombre = data<span class="op">?.</span><span class="fn">getStringExtra</span>(<span class="str">"NUEVO_NOMBRE"</span>) <span class="op">?:</span> <span class="str">""</span>
+            <span class="kw">val</span> nuevoEmail  = data<span class="op">?.</span><span class="fn">getStringExtra</span>(<span class="str">"NUEVO_EMAIL"</span>)  <span class="op">?:</span> <span class="str">""</span>
+
+            <span class="cm">// Actualizar la UI con los datos recibidos</span>
+            <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvNombreActual).text = <span class="str">"Nombre: $nuevoNombre"</span>
+            <span class="fn">findViewById</span>&lt;<span class="cls">TextView</span>&gt;(<span class="cls">R</span>.id.tvEmailActual).text  = <span class="str">"Email: $nuevoEmail"</span>
+
+            <span class="cls">Toast</span>.<span class="fn">makeText</span>(<span class="kw">this</span>, <span class="str">"✅ Perfil actualizado"</span>, <span class="cls">Toast</span>.LENGTH_SHORT).<span class="fn">show</span>()
+
+        } <span class="kw">else</span> {
+            <span class="cm">// El usuario canceló o cerró el editor sin guardar</span>
+            <span class="cls">Toast</span>.<span class="fn">makeText</span>(<span class="kw">this</span>, <span class="str">"Edición cancelada"</span>, <span class="cls">Toast</span>.LENGTH_SHORT).<span class="fn">show</span>()
+        }
+    }
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">setContentView</span>(<span class="cls">R</span>.layout.activity_perfil)
+
+        <span class="cm">// ── 3. Usar el launcher al hacer clic en el botón ────────────────</span>
+        <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnEditarPerfil).<span class="fn">setOnClickListener</span> {
+            <span class="kw">val</span> intent = <span class="cls">Intent</span>(<span class="kw">this</span>, <span class="cls">EditorActivity</span>::<span class="kw">class</span>.java)
+            editarPerfilLauncher.<span class="fn">launch</span>(intent)   <span class="cm">// Reemplaza startActivity()</span>
+        }
+    }
+}</pre></div>
+    </div>
+    <div class="alert alert-warn">
+      <span class="alert-icon">⚠️</span>
+      <p><strong>Error común:</strong> Si declaras el <code>registerForActivityResult</code> dentro de <code>onCreate()</code> en lugar de como propiedad de la clase, Android lanzará una excepción en tiempo de ejecución porque el registro debe ocurrir antes de que el ciclo de vida inicie.</p>
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <p><strong>Conexión con Semana 1:</strong> El RecyclerView del ejemplo anterior puede usar este mismo patrón — al hacer clic en un ítem, abrir el editor con <code>launcher.launch(intent)</code>, editar el ítem y recibir el objeto modificado de vuelta para actualizar la lista.</p>
+    </div>
+  </div>
+
+  <!-- ══════════ TAREA ══════════ -->
+  <div class="tarea">
+    <div class="tarea-badge">📝 Práctica — Tarea</div>
+    <h2>App: Registro de Notas con edición</h2>
+    <p class="tarea-desc">Desarrolla una app de 3 pantallas que gestione un registro de notas académicas, integrando RecyclerView (Semana 1) con el flujo de navegación y retorno de resultados de esta semana.</p>
+    <div class="reqs">
+      <div class="req"><div class="req-num">1</div><div><strong>MainActivity</strong>: muestra un RecyclerView con una lista de al menos 5 notas (materia + calificación). Cada ítem tiene un botón o clic que abre la pantalla de edición.</div></div>
+      <div class="req"><div class="req-num">2</div><div><strong>EditarNotaActivity</strong>: recibe la nota actual como Extra, permite modificar la materia y la calificación con EditTexts, y al guardar devuelve los nuevos valores con <code>setResult(RESULT_OK, intent)</code>.</div></div>
+      <div class="req"><div class="req-num">3</div><div>La <strong>MainActivity</strong> debe usar <code>ActivityResultLauncher</code> para recibir la nota editada y <strong>actualizar el ítem correspondiente en el RecyclerView</strong> sin recargar toda la lista.</div></div>
+      <div class="req"><div class="req-num">4</div><div><strong>DetalleNotaActivity</strong>: al hacer clic largo (long click) sobre un ítem del RecyclerView, navegar a una tercera pantalla que muestre el historial de cambios del ítem (al menos la nota actual).</div></div>
+      <div class="req"><div class="req-num">5</div><div>El flujo de navegación debe ser correcto: usar <code>finish()</code> al cancelar y manejar el botón Atrás del sistema adecuadamente en cada pantalla.</div></div>
+      <div class="req"><div class="req-num">⭐</div><div><strong>Punto extra:</strong> Al presionar "Guardar" en la edición, si la nueva calificación es diferente a la anterior, mostrar un <code>Toast</code> en <strong>MainActivity</strong> indicando el cambio: <em>"Cálculo: 8.5 → 9.2"</em>.</div></div>
+    </div>
+    <div class="entrega">
+      <strong>📦 Entrega</strong>
+      <p>Proyecto comprimido en .zip + 3 capturas de pantalla: lista principal, pantalla de edición y pantalla de detalle.</p>
+    </div>
+  </div>
+
+</div>
+</body>
 </html>

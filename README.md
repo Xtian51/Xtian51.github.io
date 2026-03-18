@@ -1160,7 +1160,7 @@
     </div>
     <div class="entrega">
       <strong>📦 Entrega</strong>
-      <p>Proyecto comprimido en .zip + 3 capturas de pantalla: lista principal, pantalla de edición y pantalla de detalle.</p>
+      <p>Lunes 23 de marzo, demostración en vivo para firma.</p>
     </div>
   </div>
 

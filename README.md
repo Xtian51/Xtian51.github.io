@@ -384,6 +384,7 @@
       line-height: 1.65;
       white-space: pre;
       color: #ddd;
+      background: inherit;
     }
 
     .kw {

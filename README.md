@@ -337,11 +337,6 @@
       font-size: 0.84rem;
     }
 
-    .code-block pre,
-    .code-body pre {
-    background: transparent;
-    }
-
     .code-header {
       display: flex;
       align-items: center;
@@ -713,15 +708,14 @@
     <div class="section">
       <div class="section-title"><span class="tag">XML</span> Código 1 — Layout de la Activity (contenedor)</div>
       <p>La Activity necesita un contenedor donde se mostrarán los Fragments. Se usa un
-        <code>FragmentContainerView</code> o un <code>FrameLayout</code>.
-      </p>
+        <code>FragmentContainerView</code> o un <code>FrameLayout</code>.</p>
       <div class="code-block">
         <div class="code-header">
           <span class="code-lang lang-xml">XML</span>
           <span class="code-filename">res/layout/activity_main.xml</span>
         </div>
         <div class="code-body">
-          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+          <pre style="background:transparent"><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
 <span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
     <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
     <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
@@ -786,7 +780,7 @@
           <span class="code-filename">res/layout/fragment_inicio.xml</span>
         </div>
         <div class="code-body">
-          <pre><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
+          <pre style="background:transparent"><span class="tag">&lt;?xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"utf-8"</span><span class="tag">?&gt;</span>
 <span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span>
     <span class="attr">xmlns:android</span>=<span class="val">"http://schemas.android.com/apk/res/android"</span>
     <span class="attr">xmlns:app</span>=<span class="val">"http://schemas.android.com/apk/res-auto"</span>
@@ -843,7 +837,8 @@
           <span class="code-filename">res/layout/fragment_perfil.xml &amp; fragment_config.xml</span>
         </div>
         <div class="code-body">
-          <pre><span class="cm">&lt;!-- fragment_perfil.xml — misma estructura, fondo #E8F5E9 --&gt;</span>
+          <pre
+            style="background:transparent"><span class="cm">&lt;!-- fragment_perfil.xml — misma estructura, fondo #E8F5E9 --&gt;</span>
 <span class="cm">&lt;!-- Cambiar android:background="#E8F5E9" y los textos --&gt;</span>
 <span class="tag">&lt;TextView</span> <span class="attr">android:text</span>=<span class="val">"👤 Perfil del Usuario"</span> ... <span class="tag">/&gt;</span>
 <span class="tag">&lt;TextView</span> <span class="attr">android:id</span>=<span class="val">"@+id/tvPerfilNombre"</span>
@@ -872,7 +867,7 @@
           <span class="code-filename">InicioFragment.kt</span>
         </div>
         <div class="code-body">
-          <pre><span class="kw">import</span> android.os.Bundle
+          <pre style="background:transparent"><span class="kw">import</span> android.os.Bundle
 <span class="kw">import</span> android.view.LayoutInflater
 <span class="kw">import</span> android.view.View
 <span class="kw">import</span> android.view.ViewGroup
@@ -911,8 +906,7 @@
         <span class="alert-icon">⚠️</span>
         <p><strong>Error común:</strong> Llamar a <code>view.findViewById()</code> dentro de <code>onCreateView()</code>
           antes de retornar la vista resulta en <code>NullPointerException</code>. Siempre usar
-          <code>onViewCreated()</code> para acceder a los widgets.
-        </p>
+          <code>onViewCreated()</code> para acceder a los widgets.</p>
       </div>
     </div>
 
@@ -925,7 +919,7 @@
           <span class="code-filename">MainActivity.kt</span>
         </div>
         <div class="code-body">
-          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+          <pre style="background:transparent"><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
 <span class="kw">import</span> android.os.Bundle
 <span class="kw">import</span> android.widget.Button
 <span class="kw">import</span> androidx.fragment.app.Fragment
@@ -1023,7 +1017,7 @@
           <span class="code-filename">PerfilFragment.kt</span>
         </div>
         <div class="code-body">
-          <pre><span class="kw">import</span> android.os.Bundle
+          <pre style="background:transparent"><span class="kw">import</span> android.os.Bundle
 <span class="kw">import</span> android.view.LayoutInflater
 <span class="kw">import</span> android.view.View
 <span class="kw">import</span> android.view.ViewGroup
@@ -1082,7 +1076,7 @@
           <span class="code-filename">InicioFragment.kt (versión final)</span>
         </div>
         <div class="code-body">
-          <pre><span class="kw">import</span> android.content.Context
+          <pre style="background:transparent"><span class="kw">import</span> android.content.Context
 <span class="kw">import</span> android.os.Bundle
 <span class="kw">import</span> android.view.LayoutInflater
 <span class="kw">import</span> android.view.View
@@ -1143,7 +1137,7 @@
           <span class="code-filename">MainActivity.kt (versión final)</span>
         </div>
         <div class="code-body">
-          <pre><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
+          <pre style="background:transparent"><span class="kw">import</span> androidx.appcompat.app.AppCompatActivity
 <span class="kw">import</span> android.os.Bundle
 <span class="kw">import</span> android.widget.Button
 <span class="kw">import</span> android.widget.Toast
@@ -1167,7 +1161,7 @@
             <span class="cm">// Activity → Fragment: pasar datos con newInstance()</span>
             <span class="fn">cargarFragment</span>(<span class="cls">PerfilFragment</span>.<span class="fn">newInstance</span>(
                 nombre = <span class="str">"Ana García"</span>,
-                email  = <span class="str">"ana@email.com"</span>
+                email  = <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1b0bfb091b4bcb0b8bdffb2bebc">[email&#160;protected]</a>"</span>
             ))
         }
         <span class="fn">findViewById</span>&lt;<span class="cls">Button</span>&gt;(<span class="cls">R</span>.id.btnFragmentConfig).<span class="fn">setOnClickListener</span> {
@@ -1191,7 +1185,7 @@
 
     <span class="kw">override fun</span> <span class="fn">onNavegar</span>(destino: <span class="cls">String</span>) {
         <span class="kw">when</span> (destino) {
-            <span class="str">"perfil"</span> <span class="op">-&gt;</span> <span class="fn">cargarFragment</span>(<span class="cls">PerfilFragment</span>.<span class="fn">newInstance</span>(<span class="str">"Ana García"</span>, <span class="str">"ana@email.com"</span>))
+            <span class="str">"perfil"</span> <span class="op">-&gt;</span> <span class="fn">cargarFragment</span>(<span class="cls">PerfilFragment</span>.<span class="fn">newInstance</span>(<span class="str">"Ana García"</span>, <span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f3929d92b3969e929a9fdd909c9e">[email&#160;protected]</a>"</span>))
             <span class="str">"config"</span> <span class="op">-&gt;</span> <span class="fn">cargarFragment</span>(<span class="cls">ConfigFragment</span>())
             <span class="kw">else</span>      <span class="op">-&gt;</span> <span class="fn">cargarFragment</span>(<span class="cls">InicioFragment</span>())
         }
@@ -1203,16 +1197,54 @@
         <span class="alert-icon">💡</span>
         <p><strong>Ventaja del patrón Interface:</strong> el Fragment no importa ni referencia a
           <code>MainActivity</code>. Puede usarse con cualquier Activity que implemente <code>InicioListener</code>. Eso
-          es exactamente lo que hace al Fragment <em>reutilizable</em>.
-        </p>
+          es exactamente lo que hace al Fragment <em>reutilizable</em>.</p>
       </div>
       <div class="alert alert-yellow">
         <span class="alert-icon">🔗</span>
-        <p><strong>Conexión con semanas anteriores:</strong> El RecyclerView de la Semana 7 puede vivir dentro de un
+        <p><strong>Conexión con semanas anteriores:</strong> El RecyclerView de la Semana 1 puede vivir dentro de un
           Fragment en lugar de una Activity. El clic del ítem puede usar
           <code>listener?.onItemSeleccionado(producto)</code> para comunicar el resultado a la Activity sin
-          acoplamiento.
-        </p>
+          acoplamiento.</p>
+      </div>
+    </div>
+
+    <!-- ConfigFragment.kt -->
+    <div class="section">
+      <div class="section-title"><span class="tag">Kotlin</span> Código 9 — ConfigFragment.kt</div>
+      <p>Fragment sencillo sin argumentos ni listener. Sirve para mostrar que no todos los Fragments necesitan
+        comunicación compleja — algunos simplemente muestran contenido estático o gestionan preferencias locales.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang lang-kotlin">Kotlin</span>
+          <span class="code-filename">ConfigFragment.kt</span>
+        </div>
+        <div class="code-body">
+          <pre style="background:transparent"><span class="kw">import</span> android.os.Bundle
+<span class="kw">import</span> android.view.LayoutInflater
+<span class="kw">import</span> android.view.View
+<span class="kw">import</span> android.view.ViewGroup
+<span class="kw">import</span> android.widget.Switch
+<span class="kw">import</span> android.widget.Toast
+<span class="kw">import</span> androidx.fragment.app.Fragment
+
+<span class="kw">class</span> <span class="cls">ConfigFragment</span> : <span class="cls">Fragment</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreateView</span>(
+        inflater: <span class="cls">LayoutInflater</span>, container: <span class="cls">ViewGroup</span>?, savedInstanceState: <span class="cls">Bundle</span>?
+    ): <span class="cls">View</span>? = inflater.<span class="fn">inflate</span>(<span class="cls">R</span>.layout.fragment_config, container, <span class="kw">false</span>)
+
+    <span class="kw">override fun</span> <span class="fn">onViewCreated</span>(view: <span class="cls">View</span>, savedInstanceState: <span class="cls">Bundle</span>?) {
+        <span class="kw">super</span>.<span class="fn">onViewCreated</span>(view, savedInstanceState)
+
+        <span class="kw">val</span> switchNotif = view.<span class="fn">findViewById</span>&lt;<span class="cls">Switch</span>&gt;(<span class="cls">R</span>.id.switchNotificaciones)
+
+        switchNotif.<span class="fn">setOnCheckedChangeListener</span> { _, isChecked <span class="op">-&gt;</span>
+            <span class="kw">val</span> msg = <span class="kw">if</span> (isChecked) <span class="str">"Notificaciones activadas"</span> <span class="kw">else</span> <span class="str">"Notificaciones desactivadas"</span>
+            <span class="cls">Toast</span>.<span class="fn">makeText</span>(<span class="fn">requireContext</span>(), msg, <span class="cls">Toast</span>.LENGTH_SHORT).<span class="fn">show</span>()
+        }
+    }
+}</pre>
+        </div>
       </div>
     </div>
 
@@ -1226,8 +1258,7 @@
         <div class="req">
           <div class="req-num">1</div>
           <div><strong>MainActivity</strong>: contiene 3 botones de navegación (similar a una barra de tabs manual) y un
-            <code>FragmentContainerView</code>. Al iniciar debe mostrar <code>ResumenFragment</code>.
-          </div>
+            <code>FragmentContainerView</code>. Al iniciar debe mostrar <code>ResumenFragment</code>.</div>
         </div>
         <div class="req">
           <div class="req-num">2</div>
@@ -1244,30 +1275,15 @@
           <div class="req-num">4</div>
           <div><strong>PerfilFragment</strong>: muestra los datos completos del estudiante e incluye un botón "Editar"
             que, a través del Listener, indica a la Activity que debe lanzar una Activity de edición (usando el
-            <code>ActivityResultLauncher</code> de la Semana 8).
-          </div>
+            <code>ActivityResultLauncher</code> de la Semana 8).</div>
         </div>
         <div class="req">
           <div class="req-num">5</div>
           <div>La navegación entre Fragments debe funcionar correctamente con el botón Atrás del sistema gracias a
-            <code>addToBackStack()</code>.
-          </div>
+            <code>addToBackStack()</code>.</div>
         </div>
         <div class="req">
           <div class="req-num star">⭐</div>
           <div><strong>Punto extra:</strong> Cuando la Activity recibe el clic de una materia desde
             <code>NotasFragment</code>, actualizar el <code>ResumenFragment</code> para mostrar la materia seleccionada
-            — demostrando comunicación Activity → Fragment de vuelta.
-          </div>
-        </div>
-      </div>
-      <div class="entrega">
-        <strong>📦 Entrega</strong>
-        <p>Viernes 23 de marzo. Se entregarán las capturas de los 3 Fragments activos y del RecyclerView de notas.</p>
-      </div>
-    </div>
-
-  </div>
-</body>
-
-</html>
+            — demostrando comunicación Activity → Fragment de vu

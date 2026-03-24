@@ -337,6 +337,11 @@
       font-size: 0.84rem;
     }
 
+    .code-block pre,
+    .code-body pre {
+    background: transparent;
+    }
+
     .code-header {
       display: flex;
       align-items: center;
@@ -384,7 +389,6 @@
       line-height: 1.65;
       white-space: pre;
       color: #ddd;
-      background: inherit;
     }
 
     .kw {

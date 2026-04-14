@@ -1155,12 +1155,12 @@
       </div>
       <div class="req">
         <div class="req-num star">⭐</div>
-        <div><strong>Punto extra:</strong> Agregar un LiveData <code>gastosPorCategoria</code> que calcule y exponga un <code>Map&lt;String, Double&gt;</code> con la suma de gastos por categoría, y mostrarlo en un TextView resumen.</div>
+        <div><strong>Opcional:</strong> Agregar un LiveData <code>gastosPorCategoria</code> que calcule y exponga un <code>Map&lt;String, Double&gt;</code> con la suma de gastos por categoría, y mostrarlo en un TextView resumen.</div>
       </div>
     </div>
     <div class="entrega">
       <strong>📦 Entrega</strong>
-      <p>Proyecto en .zip + capturas mostrando la lista de gastos, el formulario con datos escritos, y la misma pantalla después de rotar (datos intactos).</p>
+      <p>Documento con breve descripción de la practica con capturas mostrando la lista de gastos, el formulario con datos escritos, y la misma pantalla después de rotar (datos intactos).</p>
     </div>
   </div>
 
